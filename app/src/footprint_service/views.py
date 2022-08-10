@@ -1,8 +1,9 @@
+import os
 from django.views import View
 from footprint_service.models import Footprint
 from rest_framework import viewsets
 from footprint_service.serializers import FootprintSerializer
-from footprint_service.tasks import process_item
+from footprint_service.tasks import process_item, process_item_celery
 from rest_framework.response import Response
 from rest_framework import status
 from django.shortcuts import render
@@ -23,7 +24,10 @@ class FootprintViewSet(viewsets.ModelViewSet):
         fobj = serializer.save()
 
         # Hand off to celery
-        process_item.delay(fobj.pk)
+        if bool(os.environ.get("DJANGO_USE_CELERY")):
+            process_item_celery.delay(fobj.pk)
+        else:
+            process_item(fobj.pk)
 
         headers = self.get_success_headers(serializer.data)
         return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)

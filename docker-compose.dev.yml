@@ -1,0 +1,44 @@
+# docker compose --env-file ./.env.dev -f ./docker-compose.dev.yml up --build
+# docker compose --env-file ./.env.dev -f ./docker-compose.dev.yml down -v
+
+version: '3'
+
+services:
+  db:
+    image: postgres:14-alpine
+    volumes:
+      - postgres_data_dev:/var/lib/postgresql/data/
+    env_file:
+      - ./.env.dev
+    ports:
+      - 5432:5432
+  web:
+    build: ./app
+    entrypoint: /usr/local/bin/entrypoint_django_dev.sh
+    volumes:
+      - ./app/src:/home/app/src
+    env_file:
+      - ./.env.dev
+    ports:
+      - 8000:8000
+    depends_on:
+      - redis
+      - db
+    restart: on-failure
+  redis:
+    image: "redis:alpine"
+  celery:
+    build: ./app
+    entrypoint: /usr/local/bin/entrypoint_celery.sh
+    volumes:
+      - ./app/src:/home/app/src
+    env_file:
+      - ./.env.dev
+    ports:
+      - 5555:5555
+    depends_on:
+      - redis
+      - db
+    restart: on-failure
+volumes:
+  postgres_data_dev:

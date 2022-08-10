@@ -26,6 +26,10 @@ import traceback
 
 
 @shared_task()
+def process_item_celery(pk):
+    process_item(pk)
+
+
 def process_item(pk):
     try:
         fobj = Footprint.objects.get(pk=pk)
