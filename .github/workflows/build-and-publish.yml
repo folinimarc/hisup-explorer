@@ -12,8 +12,8 @@ env:
   REGISTRY: ghcr.io
   # github.repository as <account>/<repo>
   IMAGE_NAME: ${{ github.repository }}/explorer
-  BUILD_CONTEXT: ./
-  DOCKERFILE: ./docker/Dockerfile
+  BUILD_CONTEXT: ./app
+  DOCKERFILE: ./app/Dockerfile
 
 
 jobs:
