@@ -17,6 +17,7 @@ services:
     entrypoint: /usr/local/bin/entrypoint_django_prod.sh
     volumes:
       - static_data:/home/app/staticfiles
+      - nginx_conf:/home/app/nginx
     env_file:
       - ./.env.prod
     expose:
@@ -39,9 +40,10 @@ services:
       - db
     restart: on-failure
   nginx:
-    build: ./nginx
+    image: nginx:stable-alpine
     volumes:
       - static_data:/home/app/staticfiles
+      - nginx_conf:/etc/nginx/conf.d/
     ports:
       - 8000:80
     depends_on:
@@ -52,3 +54,4 @@ services:
 volumes:
   postgres_data_prod:
   static_data:
+  nginx_conf:
