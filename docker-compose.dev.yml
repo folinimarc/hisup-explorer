@@ -1,5 +1,5 @@
-# Start: docker compose -f docker-compose.dev.yml up --build
-# End: docker compose -f docker-compose.dev.yml down -v
+# Start: docker compose -p hisup_explorer_dev -f ./docker-compose.dev.yml up
+# End: docker compose -p hisup_explorer_dev -f ./docker-compose.dev.yml down -v
 
 version: '3'
 
