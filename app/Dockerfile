@@ -14,8 +14,10 @@ RUN adduser --disabled-password \
     --home $APP_HOME \
     app
 
-# install system dependencies
-RUN apt-get update && apt-get install -y git build-essential
+# install system dependencies.
+# libgl1 seems to be a dependency for cv2 that needs to be installed extra when
+# skipping the cuda installation.
+RUN apt-get update && apt-get install -y git build-essential libgl1
 
 # build the conda environment
 ENV ENV_PREFIX $APP_HOME/env
@@ -78,8 +80,6 @@ RUN mkdir $APP_HOME/staticfiles
 # Give all permissions to non root user
 RUN chown -R $UID:$GID $APP_HOME/src
 RUN chown -R $UID:$GID $APP_HOME/staticfiles
-
-RUN apt-get install -y libgl1
 
 # Clean up
 RUN apt purge -y git build-essential && \
