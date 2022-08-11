@@ -13,7 +13,7 @@ services:
     expose:
       - 5432
   web:
-    image: ghcr.io/laiskasiili/hisup-explorer/explorer:explorer-v0.0.3
+    image: ghcr.io/laiskasiili/hisup-explorer/explorer:explorer-v0.0.4
     entrypoint: /usr/local/bin/entrypoint_django_prod.sh
     volumes:
       - static_data:/home/app/staticfiles
@@ -28,7 +28,7 @@ services:
   redis:
     image: "redis:alpine"
   celery:
-    image: ghcr.io/laiskasiili/hisup-explorer/explorer:explorer-v0.0.3
+    image: ghcr.io/laiskasiili/hisup-explorer/explorer:explorer-v0.0.4
     entrypoint: /usr/local/bin/entrypoint_celery.sh
     env_file:
       - ./.env.prod
