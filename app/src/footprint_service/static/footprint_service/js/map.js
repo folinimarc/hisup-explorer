@@ -19,7 +19,7 @@ class LeafletWrapper {
 
     this.layerControl = L.control.layers({
       'OpenStreetMap': this.layer_basemap_osm,
-      'Bing Satellite': this.layer_basemap_bing
+      'Bing Satellite': this.layer_basemap_bing,
     }, null, {position: 'topleft'}).addTo(this.map)
 
     this.layer_footprints = L.geoJSON(null);
@@ -32,6 +32,21 @@ class LeafletWrapper {
         dashOffset: '0'
       }
     });
+    // For usepa facilities
+    this.markerGroup = L.featureGroup([]);
+  }
+
+  visualizeUsepaFacilities(facilities) {
+    console.log(facilities)
+    // clear existing
+    this.markerGroup.clearLayers();
+    // Draw markers
+    for (let f of facilities) {
+      this.markerGroup.addLayer(L.marker([f.Latitude83, f.Longitude83]).bindPopup(f.FacilityName));
+    }
+    this.markerGroup.addTo(this.map)
+    // Fit view to see all
+    this.map.fitBounds(this.markerGroup.getBounds().pad(0.01));
   }
 
   visualizeFootprints(bbox_analysis_geojson, footprints_geojson) {

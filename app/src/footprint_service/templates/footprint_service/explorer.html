@@ -30,9 +30,15 @@
 
     #btn-analyse {
       position: absolute;
+      top: 50px;
+      right: 10px;
+      z-index: 10000;
+    }
+
+    #btn-usepa {
+      position: absolute;
       top: 10px;
       right: 10px;
-      padding: 10px;
       z-index: 10000;
     }
   </style>
@@ -42,15 +48,16 @@
   {% csrf_token %}
 
   <div class="container-fluid">
-    <div class="row">
+    <div class="row p-3">
       <!-- Leaflet map -->
-      <div class="col-md-6">
+      <div class="col-md-6 p-1">
           <div id="map" style="height: 512px; max-width: 512px;" class="position-relative">
-            <button id="btn-analyse" class="btn btn-primary btn-sm">Extract footprints</button>
+            <button id="btn-usepa" class="btn btn-light btn-sm">Nearby usepa facilities</button>
+            <button id="btn-analyse" class="btn btn-light btn-sm">Extract footprints</button>
           </div>
       </div>
       <!-- Datatables -->
-      <div class="col-md-6">
+      <div class="col-md-6 p-1">
         <table id="table" class="table table-bordered table-sm" style="width:100%"></table>
       </div>
     </div>

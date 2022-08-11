@@ -6,7 +6,7 @@ Leaflet
 -------*/
 var mapConf = {
   domElementId: 'map',
-  initViewCenterlatLng: [47.3957554, 8.4454555],
+  initViewCenterlatLng: [36.1551787, -86.7967738],
   zoomLevel: 17
 }
 var mapWrapper = new LeafletWrapper(mapConf);
@@ -67,27 +67,24 @@ tableWrapper.table.on('click', 'tr', (e) => {
 /* ------
 Trigger footprint analysis
 -------*/
-
-document.getElementById('btn-analyse').addEventListener('click', (e) => {
-  let btn = e.currentTarget;
+function scheduleFootprintExtraction(lat, lng, zoom) {
   // Deactivate button for 2 seconds and change text - then change back
+  let btn = document.getElementById('btn-analyse');
   btn.disabled = true;
-  btn.textContent = 'Analysis scheduled!';
+  btn.textContent = 'Scheduling...';
   setTimeout(() => {
     btn.disabled = false;
     btn.textContent = 'Extract footprints';
   }, 3000)
 
-  // Get current map center and zoom level and send POST request.
-  // On success wait another
-  let latLngZoom = mapWrapper.getCenterlatLngZoom();
+  // Post request
   $.ajax({
     method:'POST',
     url:'api/footprints/',
     data:{
-      zoom_level: latLngZoom['zoom'],
-      latitude: latLngZoom['latitude'],
-      longitude: latLngZoom['longitude'],
+      latitude: lat,
+      longitude: lng,
+      zoom_level: zoom,
       csrfmiddlewaretoken: $('input[name=csrfmiddlewaretoken]').val()
     },
     success: function(data) {
@@ -96,6 +93,56 @@ document.getElementById('btn-analyse').addEventListener('click', (e) => {
       tableWrapper.table.draw();
       // Highlight new row
       tableWrapper.setRowHighlight(`id_${data.id}`);
+    }
+  });
+}
+
+document.getElementById('btn-analyse').addEventListener('click', (e) => {
+  // Get current map center and zoom level and send POST request.
+  let latLngZoom = mapWrapper.getCenterlatLngZoom();
+  scheduleFootprintExtraction(latLngZoom.latitude, latLngZoom.longitude, latLngZoom.zoom);
+});
+
+/* ------
+Request USEPA facilities
+-------*/
+
+document.getElementById('btn-usepa').addEventListener('click', (e) => {
+  let btn = e.currentTarget;
+  // Deactivate button for 2 seconds and change text - then change back
+  btn.disabled = true;
+  btn.textContent = 'Requesting...';
+  // Update button content
+  setTimeout(() => {
+    btn.disabled = false;
+    btn.textContent = 'Nearby usepa facilities';
+  }, 5000)
+
+  // Get current map center and zoom level and send POST request.
+  // On success wait another
+  let latLngZoom = mapWrapper.getCenterlatLngZoom();
+  let qLat = latLngZoom['latitude'];
+  let qLong = latLngZoom['longitude'];
+  let sRadius = 1;
+
+  //For this REST service, it is important to specify cache: true because otherwise jQuery will append an erroneous parameter to the query.
+  jQuery.ajaxSetup({
+    cache: true
+  });
+  //specify base endpoint - note callback
+  var usepaApi = "http://ofmpub.epa.gov/enviro/frs_rest_services.get_facilities?callback=?";
+  //pass in parameters
+  $.getJSON(usepaApi, {
+      output: "jsonp",
+      latitude83: qLat,
+      longitude83: qLong,
+      search_radius: sRadius,
+  })
+  .done(function (data) {
+    // Visualize facitilies
+    let facilities = data['Results']['FRSFacility'];
+    if (facilities && facilities.length>0) {
+      mapWrapper.visualizeUsepaFacilities(facilities);
     }
   });
 });
