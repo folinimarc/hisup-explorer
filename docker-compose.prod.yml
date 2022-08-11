@@ -1,5 +1,5 @@
-# docker compose --env-file ./.env.dev -f ./docker-compose.dev.yml up --build
-# docker compose --env-file ./.env.dev -f ./docker-compose.dev.yml down -v
+# Start: docker compose -f ./docker-compose.prod.yml --env-file ./.env.prod up
+# End: docker compose -f ./docker-compose.prod.yml --env-file ./.env.prod down
 
 version: '3'
 
@@ -13,12 +13,12 @@ services:
     expose:
       - 5432
   web:
-    image: ghcr.io/laiskasiili/os_gis_sandbox/hisup-explorer/explorer:${IMAGE_VERSION_EXPLORER}
+    image: ghcr.io/laiskasiili/hisup-explorer/explorer:${IMAGE_VERSION_EXPLORER}
     entrypoint: /usr/local/bin/entrypoint_django_prod.sh
     volumes:
       - static_data:/home/app/staticfiles
     env_file:
-      - ./.env.dev
+      - ./.env.prod
     expose:
       - 8000
     depends_on:
@@ -28,10 +28,10 @@ services:
   redis:
     image: "redis:alpine"
   celery:
-    image: ghcr.io/laiskasiili/os_gis_sandbox/hisup-explorer/explorer:${IMAGE_VERSION_EXPLORER}
+    image: ghcr.io/laiskasiili/hisup-explorer/explorer:${IMAGE_VERSION_EXPLORER}
     entrypoint: /usr/local/bin/entrypoint_celery.sh
     env_file:
-      - ./.env.dev
+      - ./.env.prod
     ports:
       - 5555:5555
     depends_on:
