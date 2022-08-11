@@ -2,6 +2,9 @@
 set -e
 conda activate $ENV_PREFIX
 
+# Copy nginx conf explicity to shared volume
+cp /home/app/nginx/default.conf /home/app/nginx_mount
+
 # apply migrations
 python manage.py migrate
 # collect static files
