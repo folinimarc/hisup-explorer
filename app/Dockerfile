@@ -83,7 +83,7 @@ RUN chown -R $UID:$GID $APP_HOME/staticfiles
 # nginx image via shared volume.
 RUN mkdir $APP_HOME/nginx
 RUN mkdir $APP_HOME/nginx_mount
-COPY nginx.conf $APP_HOME/nginx/default.conf
+COPY nginx.conf $APP_HOME/nginx/
 # Give all permissions to non root user
 RUN chown -R $UID:$GID $APP_HOME/nginx
 RUN chown -R $UID:$GID $APP_HOME/nginx_mount
