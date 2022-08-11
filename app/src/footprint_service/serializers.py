@@ -11,6 +11,6 @@ class FootprintSerializer(serializers.HyperlinkedModelSerializer):
 
     def to_representation(self, instance):
         rep = super().to_representation(instance)
-        rep['bbox_analysis_geojson'] = json.loads(rep['bbox_analysis_geojson']) if rep['bbox_analysis_geojson'] else None
-        rep['footprints_geojson'] = json.loads(rep['footprints_geojson']) if rep['bbox_analysis_geojson'] else None
+        rep['bbox_analysis_geojson'] = json.loads(rep['bbox_analysis_geojson']) if rep['bbox_analysis_geojson'] else {}
+        rep['footprints_geojson'] = json.loads(rep['footprints_geojson']) if rep['footprints_geojson'] else {}
         return rep
