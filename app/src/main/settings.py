@@ -131,5 +131,5 @@ BING_KEY = 'AoKXEIq7_Yw2gVJgbptkOEm9iKgQBSJ7UY2pswBckCh37x4nja-TNED-dHhdIPN7'
 # django rest options
 REST_FRAMEWORK = {
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.LimitOffsetPagination',
-    'PAGE_SIZE': 100
+    'PAGE_SIZE': 500
 }
