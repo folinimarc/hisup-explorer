@@ -5,15 +5,15 @@ on:
   workflow_dispatch:
   push:
     tags:
-      - 'v*.*.*'
+      - 'nginx-v*.*.*'
 
 env:
   # Use docker.io for Docker Hub if empty
   REGISTRY: ghcr.io
   # github.repository as <account>/<repo>
   IMAGE_NAME: ${{ github.repository }}/explorer
-  BUILD_CONTEXT: ./app
-  DOCKERFILE: ./app/Dockerfile
+  BUILD_CONTEXT: ./nginx
+  DOCKERFILE: ./nginx/Dockerfile
 
 
 jobs:

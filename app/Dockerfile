@@ -79,15 +79,6 @@ RUN chown -R $UID:$GID $APP_HOME/src
 # Create folder for staticfiles
 RUN mkdir $APP_HOME/staticfiles
 RUN chown -R $UID:$GID $APP_HOME/staticfiles
-# Copy nginx config file to image. This will be shared with
-# nginx image via shared volume.
-RUN mkdir $APP_HOME/nginx
-RUN mkdir $APP_HOME/nginx_mount
-COPY nginx.conf $APP_HOME/nginx/
-# Give all permissions to non root user
-RUN chown -R $UID:$GID $APP_HOME/nginx
-RUN chown -R $UID:$GID $APP_HOME/nginx_mount
-
 
 # Clean up
 RUN apt purge -y git build-essential && \
