@@ -1,0 +1,20 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: deployment__django_hisup_explorer
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      name: django_hisup_explorer
+  template:
+    metadata:
+      labels:
+        name: django_hisup_explorer
+    spec:
+      containers:
+        - name: django_hisup_explorer
+          image: django_hisup_explorer:v0.0.1
+          command: ['/usr/local/bin/entrypoint_django_dev.sh']
+          ports:
+            - containerPort: 8000
